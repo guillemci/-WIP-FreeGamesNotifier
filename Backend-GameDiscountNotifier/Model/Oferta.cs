@@ -34,5 +34,9 @@
                     return false;
             }
         }
+        public override string ToString()
+        {
+            return SerialitzadorAmbConfig.SerializerAmbOpcioDeModel(this);
+        }
     }
 }

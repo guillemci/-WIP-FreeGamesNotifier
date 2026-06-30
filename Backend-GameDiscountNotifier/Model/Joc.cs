@@ -8,5 +8,9 @@
         public string Tipus { get; set; }
         public SellerJoc Seller { get; set; }
         public List<JocEnPlataforma> JocEnPlataformes { get; set; } = new();
+        public override string ToString()
+        {
+            return SerialitzadorAmbConfig.SerializerAmbOpcioDeModel(this);
+        }
     }
 }

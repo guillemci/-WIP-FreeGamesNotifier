@@ -12,8 +12,8 @@ namespace Backend_GameDiscountNotifier
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            //builder.Services.AddHttpClient<BackgroundServiceAdquireJSON>();
-            //builder.Services.AddHostedService<BackgroundServiceAdquireJSON>();
+            builder.Services.AddHttpClient<BackgroundServiceAdquireJSON>();
+            builder.Services.AddHostedService<BackgroundServiceAdquireJSON>();
             //builder.Services.AddDbContext<MariaDbContext>(options =>
             //    options.UseMySql(
             //        builder.Configuration.GetConnectionString("DefaultConnection"),

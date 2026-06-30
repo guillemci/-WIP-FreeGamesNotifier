@@ -1,4 +1,6 @@
-﻿namespace Backend_GameDiscountNotifier.Model
+﻿using System.Text.Json;
+
+namespace Backend_GameDiscountNotifier.Model
 {
     public class JocEnPlataforma
     {
@@ -14,7 +16,7 @@
         public string DadesJson { get; set; }
         public override string ToString()
         {
-            return $"Id: {this.IdJocPlatataforma} ";
+            return SerialitzadorAmbConfig.SerializerAmbOpcioDeModel(this);
         }
     }
 }
