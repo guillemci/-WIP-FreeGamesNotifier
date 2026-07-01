@@ -1,4 +1,4 @@
-﻿using Backend_GameDiscountNotifier.Model;
+﻿using Backend_GameDiscountNotifier.Model.Contet;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 
@@ -15,42 +15,71 @@ namespace Backend_GameDiscountNotifier.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // taula JocEnPlataforma
-            modelBuilder.Entity<JocEnPlataforma>().HasKey(x => new { x.IdJoc, x.IdPlataforma });
-
+            //clau primaria
             modelBuilder.Entity<JocEnPlataforma>()
-                .HasOne(e => e.Plataforma)
-                .WithMany(e => e.JocsPlataforma)
-                .HasForeignKey(e => e.IdPlataforma);
+                .HasKey(pk => pk.IdJocPlatataforma);
 
+            //unique
             modelBuilder.Entity<JocEnPlataforma>()
-                .HasOne(e => e.Joc)
-                .WithMany(e => e.JocEnPlataformes)
-                .HasForeignKey(e => e.IdJoc);
-
+                .HasAlternateKey(x => new { x.IdJoc, x.IdPlataforma });
+            
+            //autoincrement a clau primaria
             modelBuilder.Entity<JocEnPlataforma>()
                 .Property(e => e.IdJocPlatataforma)
                 .ValueGeneratedOnAdd();
 
 
             // taula Joc
-            modelBuilder.Entity<Joc>().HasKey(pk => pk.IdJoc);
-
+            //clau primaria
             modelBuilder.Entity<Joc>()
-                .HasOne(e => e.Seller)
-                .WithMany(e => e.Jocs)
-                .HasForeignKey(e => e.IdSeller);
+                .HasKey(pk => pk.IdJoc);
 
+            //autoincrement a clau primaria
             modelBuilder.Entity<Joc>()
                 .Property(e => e.IdJoc)
                 .ValueGeneratedOnAdd();
 
 
-            // taula Autor
-            modelBuilder.Entity<SellerJoc>().HasKey(pk => pk.IdSeller);
+            // taula seller
+            //clau primaria
+            modelBuilder.Entity<SellerJoc>()
+                .HasKey(pk => pk.IdSeller);
 
+            //autoincrement a clau primaria
+            modelBuilder.Entity<SellerJoc>()
+                .Property(e => e.IdSeller)
+                .ValueGeneratedOnAdd();
 
             // taula Oferta
-            modelBuilder.Entity<Oferta>().HasKey(pk => pk.IdExtretOferta);
+            //clau primaria
+            modelBuilder.Entity<Oferta>()
+                .HasKey(pk => pk.IdExtretOferta);
+
+
+            //relacions
+            //relacio jocplataforma-plataforma
+            modelBuilder.Entity<JocEnPlataforma>()
+                .HasOne(e => e.Plataforma)
+                .WithMany(e => e.JocsPlataforma)
+                .HasForeignKey(e => e.IdPlataforma);
+
+            //relacio jocplataforma-joc
+            modelBuilder.Entity<JocEnPlataforma>()
+                .HasOne(e => e.Joc)
+                .WithMany(e => e.JocEnPlataformes)
+                .HasForeignKey(e => e.IdJoc);
+
+            //relacio joc-seller
+            modelBuilder.Entity<Joc>()
+                .HasOne(e => e.Seller)
+                .WithMany(e => e.Jocs)
+                .HasForeignKey(e => e.IdSeller);
+
+            //relacio oferta-jocplataforma
+            modelBuilder.Entity<Oferta>()
+                .HasOne(e => e.JocPlatataforma)
+                .WithMany(e => e.Ofertas)
+                .HasForeignKey(e => e.IdJocPlatataforma);
         }
     }
 }

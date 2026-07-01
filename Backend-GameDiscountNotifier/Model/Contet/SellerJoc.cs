@@ -1,4 +1,4 @@
-﻿namespace Backend_GameDiscountNotifier.Model
+﻿namespace Backend_GameDiscountNotifier.Model.Contet
 {
     public class SellerJoc
     {
