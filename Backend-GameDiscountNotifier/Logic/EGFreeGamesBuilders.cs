@@ -3,39 +3,52 @@ using System.Text.Json;
 
 namespace Backend_GameDiscountNotifier.Logic
 {
-    public class FreeGamesBuilders
+    public class EGFreeGamesBuilders
     {
         //pasar els metodes voids perque tornin un objecte?
-        public static void SellerBuilder(SellerJoc sellerJocTemp, JsonElement valor)
+        public static SellerJoc SellerBuilder(JsonElement valor)
         {
-            sellerJocTemp.NomSeller = valor.GetProperty("seller").GetProperty("name").ToString();
+            return new SellerJoc 
+            { 
+                NomSeller = valor.GetProperty("seller").GetProperty("name").ToString() 
+            };
         }
-        public static void JocBuilder(Joc jocTemp, JsonElement valor)
+        public static Joc JocBuilder(JsonElement valor)
         {
-            jocTemp.Title = valor.GetProperty("title").ToString();
-            jocTemp.Tipus = valor.GetProperty("offerType").ToString();
+            return new Joc
+            {
+                Title = valor.GetProperty("title").ToString(),
+                Tipus = valor.GetProperty("offerType").ToString()
+            };
         }
-        public static void JocEnPlataformaBuilder(JocEnPlataforma jocEnPlataformaTemp, JsonElement valor)
+        public static JocEnPlataforma JocEnPlataformaBuilder(JsonElement valor)
         {
-            jocEnPlataformaTemp.Desc = valor.GetProperty("description").ToString();
-            jocEnPlataformaTemp.PreuOriginal = AconseguirPreu(valor);
-            jocEnPlataformaTemp.Enllaç = ExtreureEnllacTipusOferta(valor);
-            jocEnPlataformaTemp.ImatgeLink = valor.GetProperty("keyImages")
+            return new JocEnPlataforma
+            {
+                Desc = valor.GetProperty("description").ToString(),
+                PreuOriginal = AconseguirPreu(valor),
+                Enllaç = ExtreureEnllacTipusOferta(valor),
+                ImatgeLink = valor.GetProperty("keyImages")
                 .EnumerateArray()
                 .First(e => e.GetProperty("type")
                 .ToString() == "Thumbnail")
                 .GetProperty("url")
-                .ToString();
+                .ToString()
+            };
         }
-        public static void OfertaBuilder(Oferta ofertaTemp, JsonElement valor)
+        public static Oferta OfertaBuilder(JsonElement valor)
         {
-            ofertaTemp.IdExtretOferta = valor.GetProperty("id").ToString();
-            ofertaTemp.Descompte = 100;
-            ofertaTemp.DataIniciOferta = LogicaData(valor, "startDate");
-            ofertaTemp.DataFiOferta = LogicaData(valor, "endDate");
-            ofertaTemp.esGratis = true;
-            ofertaTemp.PreuMomentOferta = AconseguirPreu(valor);
-            ofertaTemp.DadesJsonOferta = valor.ToString();
+            return new Oferta
+            {
+                IdExtretOferta = valor.GetProperty("id").ToString(),
+                Descompte = 100,
+                DataIniciOferta = LogicaData(valor, "startDate"),
+                DataFiOferta = LogicaData(valor, "endDate"),
+                esGratis = true,
+                PreuMomentOferta = AconseguirPreu(valor),
+                DadesJsonOferta = valor.ToString()
+            };
+
         }
         public static decimal AconseguirPreu(JsonElement valor)
         {

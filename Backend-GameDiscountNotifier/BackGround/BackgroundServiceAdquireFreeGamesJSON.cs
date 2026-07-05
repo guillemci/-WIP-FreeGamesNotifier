@@ -22,7 +22,7 @@ namespace Backend_GameDiscountNotifier.BackGround
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             const string PLATAFORMA = "EpicGames";
-            List<SellerJoc> sellerjocs = new();
+            List<SellerJoc> sellersjocs = new();
             List<Joc> jocs = new();
             List<JocEnPlataforma> jocsEnPlataformas = new();
             List<Oferta> ofertas = new();
@@ -33,9 +33,8 @@ namespace Backend_GameDiscountNotifier.BackGround
             int IdJEPProva = 1;
             int Oferta = 1;
 
-            List<Plataforma> plataformas = new();
-
             //aixo ja estara creat a la bdd
+            List<Plataforma> plataformas = new();
             plataformas.Add(new Plataforma
             {
                 Id = 1,
@@ -58,35 +57,38 @@ namespace Backend_GameDiscountNotifier.BackGround
                         ofertas.Any(e => e.IdExtretOferta == valor.GetProperty("id").ToString())
                     )
                     {
-                        SellerJoc sellerJocTemp = new();
-                        Joc jocTemp = new();
-                        JocEnPlataforma jocEnPlataformaTemp = new();
-                        Oferta ofertaTemp = new();
+                        SellerJoc? sellerJocTemp = sellersjocs.FirstOrDefault(e => e.NomSeller == valor.GetProperty("seller").GetProperty("name").ToString());
+                        Joc? jocTemp = jocs.FirstOrDefault(e => e.Title == valor.GetProperty("title").ToString());
+                        JocEnPlataforma? jocEnPlataformaTemp = jocsEnPlataformas
+                            .FirstOrDefault(e => e.Joc.Title == valor
+                            .GetProperty("seller")
+                            .GetProperty("name")
+                            .ToString() && 
+                            e.Plataforma.NomPlataforma == PLATAFORMA);
 
-                        //seller
-                        sellerJocTemp.IdSeller = IdSellerProva;
-                        FreeGamesBuilders.SellerBuilder(sellerJocTemp, valor);
+                        if (sellerJocTemp is null)
+                        {
+                            sellerJocTemp = EGFreeGamesBuilders.SellerBuilder(valor);
+                            sellerJocTemp.IdSeller = IdSellerProva;
+                            sellersjocs.Add(sellerJocTemp);
+                        }
 
-                        //joc
-                        jocTemp.IdJoc = IdJocProva;
-                        FreeGamesBuilders.JocBuilder(jocTemp, valor);
+                        if (jocTemp is null)
+                        {
+                            jocTemp = EGFreeGamesBuilders.JocBuilder(valor);
+                            jocTemp.IdJoc = IdJocProva;
+                            jocs.Add(jocTemp);
+                        }
 
-                        //jocenplataforma
-                        jocEnPlataformaTemp.IdJocPlatataforma = IdJEPProva;
-                        FreeGamesBuilders.JocEnPlataformaBuilder(jocEnPlataformaTemp, valor);
+                        if (jocEnPlataformaTemp is null)
+                        {
+                            jocEnPlataformaTemp = EGFreeGamesBuilders.JocEnPlataformaBuilder(valor);
+                            jocEnPlataformaTemp.IdJocPlatataforma = IdJEPProva;
+                            jocsEnPlataformas.Add(jocEnPlataformaTemp);
+                        }
 
-                        //oferta
-                        FreeGamesBuilders.OfertaBuilder(ofertaTemp, valor);
-
-                        Console.WriteLine($"iteracio {IdSellerProva}");
-                        Console.WriteLine(sellerJocTemp.ToString());
-                        Console.WriteLine();
-                        Console.WriteLine(jocTemp.ToString());
-                        Console.WriteLine();
-                        Console.WriteLine(jocEnPlataformaTemp.ToString());
-                        Console.WriteLine();
-                        Console.WriteLine(ofertaTemp.ToString());
-                        Console.WriteLine();
+                        Oferta ofertaTemp = EGFreeGamesBuilders.OfertaBuilder(valor);
+                        ofertas.Add(ofertaTemp);
 
                         IdSellerProva++;
                         IdJocProva++;
