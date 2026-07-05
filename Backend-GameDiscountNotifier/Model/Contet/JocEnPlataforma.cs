@@ -7,13 +7,16 @@ namespace Backend_GameDiscountNotifier.Model.Contet
     {
         public int IdJocPlatataforma { get; set; }
         public int IdJoc { get; set; }
-        public Joc Joc { get; set; }
+        [JsonIgnore]
+        public Joc? Joc { get; set; }
         public int IdPlataforma { get; set; }
-        public Plataforma Plataforma { get; set; }
+        [JsonIgnore]
+        public Plataforma? Plataforma { get; set; }
         public string Desc { get; set; }
         public string Enllaç { get; set; }
         public decimal PreuOriginal { get; set; }
         public string ImatgeLink { get; set; }
+        [JsonIgnore]
         public List<Oferta> Ofertas { get; set; } = new();
         public override string ToString()
         {

@@ -6,13 +6,13 @@ namespace Backend_GameDiscountNotifier.Model.Contet
     {
         public string IdExtretOferta { get; set; }
         public int IdJocPlatataforma { get; set; }
+        [JsonIgnore]
         public JocEnPlataforma JocPlatataforma { get; set; }
         public int Descompte { get; set; } 
         public DateTimeOffset DataIniciOferta { get; set; }
         public DateTimeOffset DataFiOferta { get; set; }
         public bool esGratis { get; set; }
         public decimal PreuMomentOferta { get; set; }
-        [JsonIgnore]
         public string DadesJsonOferta { get; set; }
         //public decimal DescompteCalculat
         //{

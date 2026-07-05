@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Backend_GameDiscountNotifier.Model
 {
@@ -8,7 +9,8 @@ namespace Backend_GameDiscountNotifier.Model
         {
             var options = new JsonSerializerOptions
             {
-                WriteIndented = true
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                MaxDepth = 1
             };
 
             return JsonSerializer.Serialize(contingut, options);

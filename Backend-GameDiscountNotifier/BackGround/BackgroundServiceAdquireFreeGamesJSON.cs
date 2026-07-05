@@ -41,6 +41,8 @@ namespace Backend_GameDiscountNotifier.BackGround
                 NomPlataforma = "Epic Games"
             });
 
+            Plataforma? plataformaEpic = plataformas.FirstOrDefault(e => e.NomPlataforma == "Epic Games");
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 var resposta = await httpClient.GetStringAsync(Url);
@@ -60,11 +62,11 @@ namespace Backend_GameDiscountNotifier.BackGround
                         SellerJoc? sellerJocTemp = sellersjocs.FirstOrDefault(e => e.NomSeller == valor.GetProperty("seller").GetProperty("name").ToString());
                         Joc? jocTemp = jocs.FirstOrDefault(e => e.Title == valor.GetProperty("title").ToString());
                         JocEnPlataforma? jocEnPlataformaTemp = jocsEnPlataformas
-                            .FirstOrDefault(e => e.Joc.Title == valor
+                            .FirstOrDefault(e => e.Joc?.Title == valor
                             .GetProperty("seller")
                             .GetProperty("name")
                             .ToString() && 
-                            e.Plataforma.NomPlataforma == PLATAFORMA);
+                            e.Plataforma?.NomPlataforma == PLATAFORMA);
 
                         if (sellerJocTemp is null)
                         {
@@ -90,13 +92,19 @@ namespace Backend_GameDiscountNotifier.BackGround
                         Oferta ofertaTemp = EGFreeGamesBuilders.OfertaBuilder(valor);
                         ofertas.Add(ofertaTemp);
 
+                        RelationsBuilder.RelationBuilder(jocTemp, jocEnPlataformaTemp, ofertaTemp, plataformaEpic, sellerJocTemp);
+
                         IdSellerProva++;
                         IdJocProva++;
                         IdJEPProva++;
                         Oferta++;
                     }
                 }
-                await Task.Delay(TimeSpan.FromSeconds(1040), stoppingToken);
+
+                foreach (var element in jocs)
+                    Console.WriteLine(element);
+
+                await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace Backend_GameDiscountNotifier.Model.Contet
+﻿using System.Text.Json.Serialization;
+
+namespace Backend_GameDiscountNotifier.Model.Contet
 {
     public class Joc
     {
@@ -6,7 +8,9 @@
         public string Title { get; set; }
         public int IdSeller { get; set; }
         public string Tipus { get; set; }
+        [JsonIgnore]
         public SellerJoc Seller { get; set; }
+        [JsonIgnore]
         public List<JocEnPlataforma> JocEnPlataformes { get; set; } = new();
         public override string ToString()
         {
