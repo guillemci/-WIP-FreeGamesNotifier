@@ -7,10 +7,11 @@ namespace Backend_GameDiscountNotifier.Data
     public class MariaDbContext : DbContext
     {
         public MariaDbContext(DbContextOptions<MariaDbContext> options) : base(options) {}
-        public DbSet<JocEnPlataforma> JocEnPlataforma { get; set; }
+        public DbSet<JocEnPlataforma> JocsEnPlataformes { get; set; }
         public DbSet<Joc> Jocs { get; set; }
         public DbSet<Plataforma> Plataformes { get; set; }
-        public DbSet<SellerJoc> SellerJoc { get; set; }
+        public DbSet<SellerJoc> SellersJocs { get; set; }
+        public DbSet<Oferta> Ofertas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,10 @@ namespace Backend_GameDiscountNotifier.Data
                 .Property(e => e.IdJoc)
                 .ValueGeneratedOnAdd();
 
+            //index
+            modelBuilder.Entity<Joc>()
+                .HasIndex(e => e.Title);
+
 
             // taula seller
             //clau primaria
@@ -50,10 +55,24 @@ namespace Backend_GameDiscountNotifier.Data
                 .Property(e => e.IdSeller)
                 .ValueGeneratedOnAdd();
 
+            //index
+            modelBuilder.Entity<SellerJoc>()
+                .HasIndex(e => e.NomSeller);
+
             // taula Oferta
             //clau primaria
             modelBuilder.Entity<Oferta>()
                 .HasKey(pk => pk.IdExtretOferta);
+
+
+            //plataforma
+            //clau primaria
+            modelBuilder.Entity<Plataforma>()
+                .HasKey(e => e.Id);
+
+            //index
+            modelBuilder.Entity<Plataforma>()
+                .HasIndex(e => e.NomPlataforma);
 
 
             //relacions

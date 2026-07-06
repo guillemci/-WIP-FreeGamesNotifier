@@ -9,8 +9,7 @@ namespace Backend_GameDiscountNotifier.Model
         {
             var options = new JsonSerializerOptions
             {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                MaxDepth = 1
+                WriteIndented = true
             };
 
             return JsonSerializer.Serialize(contingut, options);

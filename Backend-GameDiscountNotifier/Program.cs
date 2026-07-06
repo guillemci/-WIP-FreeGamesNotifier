@@ -14,14 +14,14 @@ namespace Backend_GameDiscountNotifier
             // Add services to the container.
             builder.Services.AddHttpClient<BackgroundServiceAdquireFreeGamesJSON>();
             builder.Services.AddHostedService<BackgroundServiceAdquireFreeGamesJSON>();
-            //builder.Services.AddDbContext<MariaDbContext>(options =>
-            //    options.UseMySql(
-            //        builder.Configuration.GetConnectionString("DefaultConnection"),
-            //        ServerVersion.AutoDetect(
-            //            builder.Configuration.GetConnectionString("DefaultConnection")
-            //        )
-            //    )
-            //);
+            builder.Services.AddDbContext<MariaDbContext>(options =>
+                options.UseMySql(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    ServerVersion.AutoDetect(
+                        builder.Configuration.GetConnectionString("DefaultConnection")
+                    )
+                )
+            );
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -30,12 +30,12 @@ namespace Backend_GameDiscountNotifier
 
             var app = builder.Build();
 
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var context = scope.ServiceProvider.GetRequiredService<MariaDbContext>();
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<MariaDbContext>();
 
-            //    await LaboratoriDb.Insert(context);
-            //}
+                await LaboratoriDb.Insert(context);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
