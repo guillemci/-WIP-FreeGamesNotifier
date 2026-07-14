@@ -125,12 +125,5 @@ namespace Backend_GameDiscountNotifier.Logic
                 .GetProperty(arrel3Definit)
                 .ToString();
         }
-        //public static void EpicGameMapper
-        //(
-        //    SellerJoc sellerJocTemp, 
-        //    Joc jocTemp, 
-        //    JocEnPlataforma jocEnPlataformaTemp, 
-        //    Oferta ofertaTemp, 
-        //    JsonElement valor) {}
     }
 }

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Backend_GameDiscountNotifier.BackGround
+namespace Backend_GameDiscountNotifier.Background.EpicGamesBackground
 {
     public class BackgroundServiceAdquireFreeGamesJSON : BackgroundService
     {
@@ -24,7 +24,7 @@ namespace Backend_GameDiscountNotifier.BackGround
             const string PLATAFORMA = "Epic_Games";
 
             using IServiceScope scope = scopeFactory.CreateScope();
-            MariaDbContext context = scope.ServiceProvider.GetRequiredService<MariaDbContext>();
+            using MariaDbContext context = scope.ServiceProvider.GetRequiredService<MariaDbContext>();
             //aixo ja estara creat a la bdd
             Plataforma? plataformaEpic = context.Plataformes.FirstOrDefault(e => e.NomPlataforma == "Epic_Games");
             Console.WriteLine(plataformaEpic);
@@ -88,7 +88,7 @@ namespace Backend_GameDiscountNotifier.BackGround
                 foreach (var element in context.Jocs)
                     Console.WriteLine(element);
 
-                await Task.Delay(TimeSpan.FromSeconds(50), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(28800), stoppingToken);
             }
         }
     }

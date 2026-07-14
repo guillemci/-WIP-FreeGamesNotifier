@@ -14,11 +14,16 @@ namespace Backend_GameDiscountNotifier.Logic
             SellerJoc sellerJoc
         )
         {
+            //relacio joc-seller
             joc.Seller = sellerJoc;
-
+            
+            //relacio jocenplataforma-joc
             jocEnPlataforma.Joc = joc;
+
+            //relacio jocenplataforma-plataforma
             jocEnPlataforma.Plataforma = plataforma;
 
+            //relacio oferta-jocenplataforma
             oferta.JocPlatataforma = jocEnPlataforma;
         }
     }
