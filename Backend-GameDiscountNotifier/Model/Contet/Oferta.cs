@@ -4,6 +4,7 @@ namespace Backend_GameDiscountNotifier.Model.Contet
 {
     public class Oferta
     {
+        public int IdOferta { get; set; }
         public string IdExtretOferta { get; set; }
         public int IdJocPlatataforma { get; set; }
         [JsonIgnore]
@@ -14,6 +15,8 @@ namespace Backend_GameDiscountNotifier.Model.Contet
         public bool esGratis { get; set; }
         public decimal PreuMomentOferta { get; set; }
         public string DadesJsonOferta { get; set; }
+        public bool EstaActiva { get; set; }
+        public bool EstaPlanificada { get; set; }
         //public decimal DescompteCalculat
         //{
         //    get

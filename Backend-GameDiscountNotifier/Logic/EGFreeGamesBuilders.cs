@@ -1,4 +1,5 @@
-﻿using Backend_GameDiscountNotifier.Model.Contet;
+﻿using Backend_GameDiscountNotifier.Data;
+using Backend_GameDiscountNotifier.Model.Contet;
 using System.Text.Json;
 
 namespace Backend_GameDiscountNotifier.Logic
@@ -36,20 +37,46 @@ namespace Backend_GameDiscountNotifier.Logic
                 .ToString()
             };
         }
-        public static Oferta OfertaBuilder(JsonElement valor)
+
+        public static Oferta OfertaBuilder(JsonElement fixaJoc, DateTimeOffset datainici, DateTimeOffset dataFi)
         {
             return new Oferta
             {
-                IdExtretOferta = valor.GetProperty("id").ToString(),
+                IdExtretOferta = fixaJoc.GetProperty("id").ToString(),
                 Descompte = 100,
-                DataIniciOferta = LogicaData(valor, "startDate"),
-                DataFiOferta = LogicaData(valor, "endDate"),
+                DataIniciOferta = datainici,
+                DataFiOferta = dataFi,
                 esGratis = true,
-                PreuMomentOferta = AconseguirPreu(valor),
-                DadesJsonOferta = valor.ToString()
+                PreuMomentOferta = AconseguirPreu(fixaJoc),
+                DadesJsonOferta = fixaJoc.ToString()
             };
-
         }
+        //public static List<Oferta> OfertaBuilder(JsonElement valor, string estatOferta, MariaDbContext context)
+        //{
+        //    List<Oferta> llista = new();
+
+        //    var promotions = valor.GetProperty("promotions").GetProperty(estatOferta).GetProperty("promotionalOffers");
+        //    var id = valor.GetProperty("id").ToString();
+
+        //    foreach (var element in promotions.EnumerateArray())
+        //        if (!context.Ofertas.Any(e => 
+        //            e.DataIniciOferta != LogicaData(element, "startDate") && 
+        //            e.DataFiOferta != LogicaData(element, "endDate") ||
+        //            e.IdExtretOferta != id
+        //        )) 
+
+        //        llista.Add(new Oferta
+        //        {
+        //            IdExtretOferta = id,
+        //            Descompte = 100,
+        //            DataIniciOferta = LogicaData(element, "startDate"),
+        //            DataFiOferta = LogicaData(element, "endDate"),
+        //            esGratis = true,
+        //            PreuMomentOferta = AconseguirPreu(valor),
+        //            DadesJsonOferta = valor.ToString()
+        //        });
+        //    return llista;
+        //}
         public static decimal AconseguirPreu(JsonElement valor)
         {
             var text = valor.GetProperty("price")
@@ -97,33 +124,33 @@ namespace Backend_GameDiscountNotifier.Logic
                 //per exemple urlslug i catalogns, i si despres de montar i fer peticions no va tirar excepcio...
             }
         }
+
         public static DateTimeOffset LogicaData(JsonElement valor, string tipusdedata)
         {
-            var promotions = valor.GetProperty("promotions");
-
-            if (promotions.GetProperty("promotionalOffers").GetArrayLength() != 0)
-            {
-                return DateTimeOffset.Parse(extreureData(valor, "promotionalOffers", "promotionalOffers", tipusdedata));
-            }
-            else if (promotions.GetProperty("upcomingPromotionalOffers").GetArrayLength() != 0)
-            {
-                return DateTimeOffset.Parse(extreureData(valor, "upcomingPromotionalOffers", "promotionalOffers", tipusdedata));
-            }
-            else
-            {
-                throw new Exception();
-            }
+            return DateTimeOffset.Parse(valor.GetProperty(tipusdedata).ToString());
         }
-        public static string extreureData(JsonElement valor, string arrel1, string arrel2, string arrel3Definit)
-        {
-            const string PROMOTIONS = "promotions";
 
-            return valor
-                .GetProperty(PROMOTIONS)
-                .GetProperty(arrel1)[0]
-                .GetProperty(arrel2)[0]
-                .GetProperty(arrel3Definit)
-                .ToString();
+        //public static DateTimeOffset LogicaData(JsonElement valor, string tipusdedata)
+        //{
+            //var promotions = valor.GetProperty("promotions");
+
+            //if (promotions.GetProperty("promotionalOffers").GetArrayLength() != 0)
+            //    return DateTimeOffset.Parse(extreureData(valor, "promotionalOffers", "promotionalOffers", tipusdedata));
+            //else if (promotions.GetProperty("upcomingPromotionalOffers").GetArrayLength() != 0)
+            //    return DateTimeOffset.Parse(extreureData(valor, "upcomingPromotionalOffers", "promotionalOffers", tipusdedata));
+            //else
+            //    throw new Exception();
         }
+        //public static string extreureData(JsonElement valor, string arrel1, string arrel2, string arrel3Definit)
+        //{
+        //    const string PROMOTIONS = "promotions";
+
+        //    return valor
+        //        .GetProperty(PROMOTIONS)
+        //        .GetProperty(arrel1)[0]
+        //        .GetProperty(arrel2)[0]
+        //        .GetProperty(arrel3Definit)
+        //        .ToString();
+        //}
     }
 }

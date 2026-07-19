@@ -25,9 +25,10 @@ namespace Backend_GameDiscountNotifier.Controllers
             DateTime ara = DateTime.Now;
             var resultat = await context
                 .Ofertas
-                //.Where(e => ara >= e.DataIniciOferta && ara <= e.DataFiOferta)
+                .Where(e => ara >= e.DataIniciOferta && ara <= e.DataFiOferta)
                 .Select(e => new CaratulaOferta
                 {
+                    Title = e.JocPlatataforma.Joc.Title,
                     IdOferta = e.IdExtretOferta,
                     Preu = e.PreuMomentOferta,
                     EsGratis = e.esGratis,

@@ -14,6 +14,8 @@ namespace Backend_GameDiscountNotifier
             // Add services to the container.
             builder.Services.AddHttpClient<BackgroundServiceAdquireFreeGamesJSON>();
             builder.Services.AddHostedService<BackgroundServiceAdquireFreeGamesJSON>();
+            builder.Services.AddHttpClient<BackgroundDatesAnalizer>();
+            builder.Services.AddHostedService<BackgroundDatesAnalizer>();
             builder.Services.AddDbContext<MariaDbContext>(options =>
                 options.UseMySql(
                     builder.Configuration.GetConnectionString("DefaultConnection"),

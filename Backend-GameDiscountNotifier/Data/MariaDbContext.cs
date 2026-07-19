@@ -62,7 +62,7 @@ namespace Backend_GameDiscountNotifier.Data
             // taula Oferta
             //clau primaria
             modelBuilder.Entity<Oferta>()
-                .HasKey(pk => pk.IdExtretOferta);
+                .HasKey(pk => pk.IdOferta);
 
 
             //plataforma

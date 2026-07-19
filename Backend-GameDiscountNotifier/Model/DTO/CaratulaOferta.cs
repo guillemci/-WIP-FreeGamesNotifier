@@ -2,6 +2,7 @@
 {
     public class CaratulaOferta
     {
+        public string Title { get; set; } = "";
         public string IdOferta { get; set; } = "";
         public decimal Preu { get; set; }
         public bool EsGratis { get; set; }
