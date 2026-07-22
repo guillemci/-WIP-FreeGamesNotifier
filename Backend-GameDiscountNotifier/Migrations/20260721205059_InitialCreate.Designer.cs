@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_GameDiscountNotifier.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    [Migration("20260706162920_InitialCreate")]
+    [Migration("20260721205059_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -93,8 +93,11 @@ namespace Backend_GameDiscountNotifier.Migrations
 
             modelBuilder.Entity("Backend_GameDiscountNotifier.Model.Contet.Oferta", b =>
                 {
-                    b.Property<string>("IdExtretOferta")
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("IdOferta")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdOferta"));
 
                     b.Property<string>("DadesJsonOferta")
                         .IsRequired()
@@ -109,6 +112,13 @@ namespace Backend_GameDiscountNotifier.Migrations
                     b.Property<int>("Descompte")
                         .HasColumnType("int");
 
+                    b.Property<bool>("EstaActiva")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("IdExtretOferta")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<int>("IdJocPlatataforma")
                         .HasColumnType("int");
 
@@ -118,7 +128,7 @@ namespace Backend_GameDiscountNotifier.Migrations
                     b.Property<bool>("esGratis")
                         .HasColumnType("tinyint(1)");
 
-                    b.HasKey("IdExtretOferta");
+                    b.HasKey("IdOferta");
 
                     b.HasIndex("IdJocPlatataforma");
 

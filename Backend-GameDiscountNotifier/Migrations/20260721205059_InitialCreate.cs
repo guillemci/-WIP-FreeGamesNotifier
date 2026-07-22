@@ -108,7 +108,9 @@ namespace Backend_GameDiscountNotifier.Migrations
                 name: "Ofertas",
                 columns: table => new
                 {
-                    IdExtretOferta = table.Column<string>(type: "varchar(255)", nullable: false)
+                    IdOferta = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IdExtretOferta = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IdJocPlatataforma = table.Column<int>(type: "int", nullable: false),
                     Descompte = table.Column<int>(type: "int", nullable: false),
@@ -117,11 +119,12 @@ namespace Backend_GameDiscountNotifier.Migrations
                     esGratis = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     PreuMomentOferta = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     DadesJsonOferta = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EstaActiva = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ofertas", x => x.IdExtretOferta);
+                    table.PrimaryKey("PK_Ofertas", x => x.IdOferta);
                     table.ForeignKey(
                         name: "FK_Ofertas_JocsEnPlataformes_IdJocPlatataforma",
                         column: x => x.IdJocPlatataforma,

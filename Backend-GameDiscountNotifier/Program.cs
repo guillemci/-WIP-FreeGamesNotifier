@@ -32,12 +32,12 @@ namespace Backend_GameDiscountNotifier
 
             var app = builder.Build();
 
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var context = scope.ServiceProvider.GetRequiredService<MariaDbContext>();
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<MariaDbContext>();
 
-            //    await LaboratoriDb.Insert(context);
-            //}
+                await LaboratoriDb.Insert(context);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -64,6 +64,9 @@ namespace Backend_GameDiscountNotifier.Data
             modelBuilder.Entity<Oferta>()
                 .HasKey(pk => pk.IdOferta);
 
+            modelBuilder.Entity<Oferta>()
+                .Property(e => e.IdOferta)
+                .ValueGeneratedOnAdd();
 
             //plataforma
             //clau primaria
