@@ -1,6 +1,7 @@
 ﻿using Backend_GameDiscountNotifier.Data;
 using Backend_GameDiscountNotifier.Logic;
 using Backend_GameDiscountNotifier.Model.Contet;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text.Json;
 
 namespace Backend_GameDiscountNotifier.Background.EpicGamesBackground
@@ -33,7 +34,13 @@ namespace Backend_GameDiscountNotifier.Background.EpicGamesBackground
                     .GetProperty("searchStore")
                     .GetProperty("elements");
 
-                IEnumerable<Oferta> ofertasFiltrades = context.Ofertas.Where(e => e.EstaActiva).ToList();
+                Dictionary<(string Id, DateTimeOffset DataInici, DateTimeOffset DataFi), Oferta> 
+                    ofertasFiltrades = context.Ofertas
+                    .Where(e => e.EstaActiva)
+                    .ToDictionary(e => (e.IdExtretOferta, e.DataIniciOferta, e.DataFiOferta));
+
+                foreach (var oferta in ofertasFiltrades)
+                    oferta.Value.EstaActiva = false;
 
                 foreach (var valor in contingut.EnumerateArray())
                 {    
@@ -49,18 +56,19 @@ namespace Backend_GameDiscountNotifier.Background.EpicGamesBackground
             }
         }
 
-        //podria intentar fer moltes d'aquestes comprovacions amb un hashset, ara mateix tinc el cap reventat, nose ni el codi que escric
-        //veig la possibilitat d'ajuntar abans els 2 tipos de promocions en una sola llista amb addrange
-        //tant promotionalOffers com upcomingPromotionalOffers
-        //pero potser hi ha alguna manera millor de fer-ho, de moment o fare aixi, vui acabar aquest projecte
-        public async Task logica(IEnumerable<Oferta> ofertasFiltrades, JsonElement valor, string id)
+        public async Task logica(Dictionary<(string Id, DateTimeOffset DataInici, DateTimeOffset DataFi), Oferta> ofertasFiltrades, JsonElement valor, string id)
         {
-            var promotions = AjuntarLlistas(valor);
+            var ofertes = AjuntarLlistas(valor)
+                .SelectMany(grup => grup.GetProperty("promotionalOffers").EnumerateArray());
 
-            foreach (var grups in promotions)
+            foreach (var oferta in ofertes)
             {
-                var ofertasJson = grups.GetProperty("promotionalOffers").EnumerateArray().GetEnumerator();
-                RecorrerOfertas(ofertasFiltrades, ofertasJson, id);
+                var datafi = DateTimeOffset.Parse(oferta.GetProperty("endDate").ToString());
+                var datainici = DateTimeOffset.Parse(oferta.GetProperty("startDate").ToString());
+                var clau = (id, datainici, datafi);
+
+                if (ofertasFiltrades.TryGetValue(clau, out var ofertaBD))
+                    ofertasFiltrades[(id, datainici, datafi)].EstaActiva = true;
             }
         }
 
@@ -70,37 +78,6 @@ namespace Backend_GameDiscountNotifier.Background.EpicGamesBackground
             promotions.AddRange(valor.GetProperty("promotions").GetProperty("upcomingPromotionalOffers").EnumerateArray().ToList());
 
             return promotions;
-        }
-
-        public static void RecorrerOfertas(IEnumerable<Oferta> ofertasFiltrades, IEnumerator<JsonElement> ofertasJson, string id)
-        {
-
-            foreach (var oferta in ofertasFiltrades)
-            {
-                bool trovat = true;
-
-                while (ofertasJson.MoveNext() && trovat)
-                {
-                    if (TrovatEnElJsonEpic(oferta, ofertasJson, id))
-                    {
-                        trovat = false;
-                        oferta.EstaActiva = trovat;
-                    }
-                }
-
-                //segons ChatGpt IEnumerator<JsonElement>, no dona suport a Reset, potser Pasar IEnumerable i conseguir el Enumerator en bucle funciona
-                //o usar foreach amb break... NO OK
-                ofertasJson.Reset();
-            }
-        }
-
-        //potser convertir en LAMBDA/DELEGATE
-        public static bool TrovatEnElJsonEpic(Oferta oferta, IEnumerator<JsonElement> ofertasJson, string id)
-        {
-            return 
-                oferta.DataFiOferta == DateTimeOffset.Parse(ofertasJson.Current.GetProperty("endDate").ToString()) && 
-                oferta.DataIniciOferta == DateTimeOffset.Parse(ofertasJson.Current.GetProperty("startDate").ToString()) && 
-                id == oferta.IdExtretOferta;
         }
     }
 }
